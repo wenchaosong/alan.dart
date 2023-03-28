@@ -1,54 +1,58 @@
+import 'dart:typed_data';
+
 import 'package:alan/alan.dart';
 import 'package:alan/proto/cosmos/bank/v1beta1/export.dart' as bank;
+import 'package:grpc/grpc.dart';
+import 'package:hex/hex.dart';
 
-void main() async {
+Future main() async {
   // Create a wallet
-  final networkInfo = NetworkInfo.fromSingleHost(
-    bech32Hrp: 'desmos',
-    host: 'localhost',
+  final networkInfo = NetworkInfo(
+    bech32Hrp: 'scc',
+    grpcInfo: GRPCInfo(
+      host: 'http://yuangao.cuxing.tech',
+      port: 1317,
+      credentials: ChannelCredentials.secure(),
+    ),
+    lcdInfo: LCDInfo(
+      host: 'http://yuangao.cuxing.tech',
+      port: 26657,
+    ),
   );
 
-  final mnemonic = [
-    'roast',
-    'stomach',
-    'welcome',
-    'please',
-    'gauge',
-    'funny',
-    'coconut',
-    'baby',
-    'bird',
-    'announce',
-    'bind',
-    'jacket',
-    'title',
-    'vibrant',
-    'tomorrow',
-    'indoor',
-    'bitter',
-    'initial',
-    'ill',
-    'analyst',
-    'thought',
-    'strike',
-    'answer',
-    'cotton',
-  ];
-  final wallet = Wallet.derive(mnemonic, networkInfo);
+  final privateKey =
+      '4f78924b4b91b171bf45ec4efc9c30cc7013fc89c17902fb0fd885b351b62bea';
+  final wallet =
+      Wallet.import(networkInfo, Uint8List.fromList(HEX.decode(privateKey)));
 
-  // 3. Create and sign the transaction
   final message = bank.MsgSend.create()
     ..fromAddress = wallet.bech32Address
-    ..toAddress = 'cosmos1cx7mec8x567xh8f4x7490ndx7xey8lnr9du2qy';
-  message.amount.add(Coin.create()
-    ..denom = 'uatom'
-    ..amount = '100');
+    ..toAddress = 'scc1w9mqg9h0eparfzuhr46wq0s4k0u5l8k56k5p3z';
+  message.amount.add(
+    Coin.create()
+      ..denom = 'scu'
+      ..amount = '33',
+  );
 
-  final signer = TxSigner.fromNetworkInfo(networkInfo);
-  final tx = await signer.createAndSign(wallet, [message]);
+  var net = NetworkInfo.fromSingleHost(
+    bech32Hrp: wallet.bech32Address,
+    host: 'yuangao.cuxing.tech',
+  );
 
-  // 4. Broadcast the transaction
-  final txSender = TxSender.fromNetworkInfo(networkInfo);
+  final signer = TxSigner.fromNetworkInfo(net);
+  final fee = Fee()
+    ..amount.add(Coin(
+      amount: '102',
+      denom: 'scu',
+    ));
+  fee.gasLimit = 200000.toInt64();
+
+  final tx = await signer.createAndSign(
+    wallet,
+    [message],
+    fee: fee,
+  );
+  final txSender = TxSender.fromNetworkInfo(net);
   final response = await txSender.broadcastTx(tx);
 
   // Check the result
