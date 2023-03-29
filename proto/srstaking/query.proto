@@ -1,0 +1,60 @@
+syntax = "proto3";
+package srstaking;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "srstaking/params.proto";
+import "srstaking/evidence.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "sc_chain/x/srstaking/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  // Parameters queries the parameters of the module.
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/sc_chain/srstaking/params";
+  }
+  // Queries a Evidence by id.
+	rpc Evidence(QueryGetEvidenceRequest) returns (QueryGetEvidenceResponse) {
+		option (google.api.http).get = "/sc_chain/srstaking/evidence/{userId}/{evidenceId}";
+	}
+
+	// Queries a list of Evidence items.
+	rpc EvidenceAll(QueryAllEvidenceRequest) returns (QueryAllEvidenceResponse) {
+		option (google.api.http).get = "/sc_chain/srstaking/evidence";
+	}
+
+// this line is used by starport scaffolding # 2
+}
+
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetEvidenceRequest {
+	int64 userId = 1;
+	int64 evidenceId = 2;
+}
+
+message QueryGetEvidenceResponse {
+	Evidence evidence = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllEvidenceRequest {
+	int64 userId = 1;
+	cosmos.base.query.v1beta1.PageRequest pagination = 2;
+}
+
+message QueryAllEvidenceResponse {
+	repeated Evidence evidence = 1 [(gogoproto.nullable) = false];
+	cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+
+// this line is used by starport scaffolding # 3

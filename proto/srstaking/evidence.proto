@@ -1,0 +1,56 @@
+syntax = "proto3";
+package srstaking;
+
+import "gogoproto/gogo.proto";
+import "cosmos_proto/cosmos.proto";
+
+option go_package = "sc_chain/x/srstaking/types";
+
+message Evidence {
+  option (gogoproto.equal)            = true;
+  //证据id
+  int64  evidenceId = 1;
+  //文章id
+  int64  articleId = 2;
+  //文章标题
+  string articleTitle = 3;
+  //文章创建时间
+  string articleCreatedAt = 4;
+  //文章更新时间
+  string articleUpdatedAt = 5;
+  //章节名
+  string chapterName = 6;
+  //章节id
+  int64  chapterId = 7;
+  //章节标题
+  string chapterTitle = 8;
+  //章节版本
+  int64 chapterVersion = 9;
+  //章节段落数
+  int64 paragraphCount = 10;
+  //章节字数
+  int64 wordCount = 11;
+  //章节创作时长
+  int64 writeDuration = 12;
+  //章节修改时长
+  int64 modifyDuration = 13;
+  //章节复制次数
+  int64 copyCount = 14;
+  //章节粘贴次数
+  int64 pastCount = 15;
+  //章节粘贴字数
+  int64 pastWordCount = 16;
+  //章节创建时间
+  string chapterCreatedAt = 17;
+  //章节更新时间
+  string chapterUpdatedAt = 18;
+  //app用户id
+  string appUserId = 19;
+  //用户平台id
+  string platformUserId = 20;
+  //用户笔名
+  string pseudonym = 21;
+  //ipfs path
+  string ipfsPath = 22;
+}
+

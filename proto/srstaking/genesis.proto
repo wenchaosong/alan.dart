@@ -1,0 +1,16 @@
+syntax = "proto3";
+package srstaking;
+
+import "gogoproto/gogo.proto";
+import "srstaking/params.proto";
+import "srstaking/evidence.proto";
+// this line is used by starport scaffolding # genesis/proto/import
+
+option go_package = "sc_chain/x/srstaking/types";
+
+// GenesisState defines the srstaking module's genesis state.
+message GenesisState {
+  Params params = 1 [(gogoproto.nullable) = false];
+  repeated Evidence evidenceList = 2 [(gogoproto.nullable) = false];
+  // this line is used by starport scaffolding # genesis/proto/state
+}
