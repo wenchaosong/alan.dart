@@ -1,9 +1,9 @@
 syntax = "proto3";
-package srstaking;
+package srspoa.srstaking;
 
 import "gogoproto/gogo.proto";
-import "srstaking/params.proto";
-import "srstaking/evidence.proto";
+import "srspoa/srstaking/params.proto";
+import "srspoa/srstaking/evidence.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "sc_chain/x/srstaking/types";
